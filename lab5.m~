@@ -1,0 +1,42 @@
+% =============================Practical 6=================================
+% ==========================Image Restoration==============================
+%% ------------------------------------------------------------------------
+% 1.Create a simulated blur in the image and deblur the image with a 
+%   Wiener Filter
+% -------------------------------------------------------------------------
+I = imread('images/cameraman.tif');
+PSF = fspecial('motion',20,11);
+I_blurred = imfilter(I, PSF, 'conv', 'circular');
+nsr = 0.0001;
+wnr3 = deconvwnr(I_blurred, PSF, nsr);
+figure;
+subplot(2,2,1);
+imshow(I)
+title('Original');
+subplot(2,2,2);
+imshow(I_blurred);
+title('Blur Image');
+subplot(2,2,4);
+imshow(wnr3);
+title('Deblurred Image by Wiener Filter');
+
+%% ------------------------------------------------------------------------
+% 2.Create a simulated blur in the image, add Gaussian noise to it and 
+%   deblur the image with a Regularized Filter.
+% -------------------------------------------------------------------------
+I = imread('images/cameraman.tif');
+PSF = fspecial('motion',20,11);
+I_blurred = imfilter(I, PSF, 'conv', 'circular');
+I_noise = imnoise(I_blurred, 'gaussian', 0, 0.0001);
+I_restore = deconvreg(I_noise,PSF,0.0001);
+
+figure;
+subplot(2,2,1)
+imshow(I);
+title('Original');
+subplot(2,2,2)
+imshow(I_noise);
+title('Noise Image');
+subplot(2,2,4);
+imshow(I_restore);
+title('Restoration of Image');
